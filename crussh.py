@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 # A cssh replacement written in Python / GTK.
 # (c)2012-2017 - Tessa Nordgren <tessa@sudo.ca>.
@@ -15,6 +15,7 @@ pygtk.require('2.0')
 import gtk
 import vte
 from EntryDialog import EntryDialog
+from collections import OrderedDict
 
 
 ### Config Dialog ###
@@ -138,7 +139,8 @@ class HostsMask:
         HostsConfFrame.add(HostsConfTable)
 
         i = 0
-        hosts = sorted(self.Terminals.keys(), reverse=False)
+
+        hosts = self.Terminals.keys()
         for host in hosts:
             HostTable = gtk.Table(1, 2)
             HostTable.props.column_spacing = 2
@@ -180,7 +182,7 @@ class CruSSH:
     }
 
     ### State Vars ###
-    Terminals = {}
+    Terminals = OrderedDict()
     TermMinWidth = 1
     TermMinHeight = 1
 
@@ -194,7 +196,8 @@ class CruSSH:
     ### Methods ###
     def reflowTable(self, cols=1, rows=1):
         # empty table and re-size
-        hosts = sorted(self.Terminals.keys(), reverse=True)
+        hosts = list(self.Terminals.keys())
+        hosts.reverse()
         for host in hosts:
             if self.Terminals[host].parent == self.LayoutTable:
                 self.LayoutTable.remove(self.Terminals[host])
